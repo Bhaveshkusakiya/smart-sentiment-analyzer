@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Smart Search + Sentiment</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #1f1c2c, #928dab);
+            color: white;
+            text-align: center;
+            padding: 40px;
+        }
+        input[type="file"], input[type="text"] {
+            width: 80%;
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 10px;
+            border: none;
+            font-size: 16px;
+        }
+        input[type=submit] {
+            margin-top: 20px;
+            padding: 10px 25px;
+            font-size: 18px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+        ul, li {
+            list-style-type: none;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Smart Search + Sentiment Analyzer</h1>
+
+    <form action="/predict" method="post" enctype="multipart/form-data">
+        <input type="file" name="csvfile" accept=".csv,.xlsx" required><br><br>
+        <input type="text" name="search_term" placeholder="Enter name, word, or ID..." required><br><br>
+        <input type="submit" value="Analyze">
+    </form>
+
+    {% if search_result %}
+        <h2>Match Found for '{{ term }}'</h2>
+        <p><strong>Sentiment:</strong> {{ sentiment }}</p>
+        <ul>
+            {% for key, value in search_result.items() %}
+                <li><strong>{{ key }}:</strong> {{ value }}</li>
+            {% endfor %}
+        </ul>
+    {% elif sentiment and not match_found %}
+        <h2>No Exact Match Found</h2>
+        <p>Analyzed sentiment of your input: <strong>{{ term }}</strong></p>
+        <p><strong>Sentiment:</strong> {{ sentiment }}</p>
+    {% endif %}
+
+    {% if error %}
+        <p style="color: red;">{{ error }}</p>
+    {% endif %}
+</body>
+</html>
